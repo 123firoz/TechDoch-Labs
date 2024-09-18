@@ -42,7 +42,7 @@ export default function ProductCarousel ({isZoomedOut,currentIndex,direction,ima
                         objectFit="cover"
                         className={`ml-[26px] rounded-l-[40%] ${
                             isZoomedOut
-                                ? "rounded-[100%] -ml-[4%]"
+                                ? "rounded-[100%] -ml-[10%]"
                                 : ""
                         }`}
                     />
