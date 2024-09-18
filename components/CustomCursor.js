@@ -1,4 +1,4 @@
-// components/CustomCursor.js
+
 import { useEffect, useRef } from 'react';
 
 const CustomCursor = () => {
