@@ -1,115 +1,198 @@
+// pages/index.js
 import Image from "next/image";
-import localFont from "next/font/local";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Leftarrow from "@/components/left-arrow";
+import Rightarrow from "@/components/right-arrow";
 
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState("up"); // Track the direction
+    const [isZoomedOut, setIsZoomedOut] = useState(false); // To track zoom effect
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const images = [
+        "/images/1.jpg", // Replace with actual image path
+        "/images/2.jpg", // Replace with actual image path
+        "/images/3.jpg", // Replace with actual image path
+        "/images/4.jpg",
+        "/images/5.jpg",
+    ];
+
+    const texts = [
+        {
+            title: "Basket Lamp",
+            subtitle: "© 2023 BRANDING",
+            linkText: "EXPLORE",
+        },
+        {
+            title: "Red Glasses",
+            subtitle: "© 2023 TRENDSETTER",
+            linkText: "DISCOVER",
+        },
+        {
+            title: "Moon Light",
+            subtitle: "© 2023 MOONLIGHT",
+            linkText: "LEARN MORE",
+        },
+        {
+            title: "Moon Light",
+            subtitle: "© 2023 MOONLIGHT",
+            linkText: "LEARN MORE",
+        },
+        {
+            title: "Moon Light",
+            subtitle: "© 2023 MOONLIGHT",
+            linkText: "LEARN MORE",
+        },
+    ];
+
+    const handleLeftArrowClick = () => {
+        setDirection("up"); // Set direction to top-to-bottom
+        setIsZoomedOut(true); // Trigger zoom-out
+        setTimeout(() => {
+            setCurrentIndex((prevIndex) =>
+                prevIndex === 0 ? images.length - 1 : prevIndex - 1
+            );
+            setIsZoomedOut(false); // Reset zoom after transition
+        }, 500); // Delay to match transition timing
+    };
+
+    const handleRightArrowClick = () => {
+        setDirection("down"); // Set direction to bottom-to-top
+        setIsZoomedOut(true); // Trigger zoom-out
+        setTimeout(() => {
+            setCurrentIndex((prevIndex) =>
+                prevIndex === images.length - 1 ? 0 : prevIndex + 1
+            );
+            setIsZoomedOut(false); // Reset zoom after transition
+        }, 500); // Delay to match transition timing
+    };
+
+    return (
+        <div className="flex h-screen relative -mb-7">
+            {/* Menu button */}
+            <div className="absolute text-white z-20 w-full flex justify-between px-32 py-8 font-serif">
+                <h1 className="text-2xl font-bold">GeekFolio</h1>{" "}
+                <button className="text-lg">Menu</button>
+            </div>
+
+            {/* Left section (30% width) */}
+            <div className="w-[30%] bg-[#1a1a1a] text-white flex flex-col justify-center items-start pl-10 relative z-10 transform translate-y-[-5%]">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentIndex}
+                        initial={{
+                            opacity: 0,
+                            y: direction === "up" ? "100%" : "-100%",
+                        }} // top-to-bottom for left click
+                        animate={{ opacity: 1, y: 0 }} // Bring to the center
+                        exit={{
+                            opacity: 0,
+                            y: direction === "up" ? "-100%" : "100%",
+                        }} // bottom-to-top for right click
+                        transition={{ duration: 0.9 }}
+                        className="relative w-full"
+                    >
+                        <h1
+                            className="text-3 font-normal tracking-wider relative w-[100vh] mb-10"
+                            style={{ marginLeft: "25%" }}
+                        >
+                            {texts[currentIndex].subtitle}
+                        </h1>
+                        <h2
+                            className="text-7xl font-bold mb-12 relative w-[100vh]"
+                            style={{ marginLeft: "25%" }}
+                        >
+                            {texts[currentIndex].title}
+                        </h2>
+                        <a
+                            href="#"
+                            className="text-3 tracking-wider underline relative w-[100vh]"
+                            style={{ marginLeft: "25%" }}
+                        >
+                            {texts[currentIndex].linkText}
+                        </a>
+                    </motion.div>
+                </AnimatePresence>
+
+               
+            </div>
+
+            {/* Right section (70% width) */}
+            <div
+                className="w-[70%] relative"
+                style={{ backgroundColor: isZoomedOut ? "#1a1a1a" : "#1a1a1a" }}
+            >
+                {/* Image Section */}
+                <div className="flex justify-center items-center h-full relative overflow-hidden">
+                    <div className="relative w-full h-[150%] flex justify-center items-center">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentIndex}
+                                initial={{
+                                    opacity: 0,
+                                    y: direction === "up" ? "100%" : "-100%",
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                    scale: isZoomedOut ? 0.9 : 1,
+                                    borderRadius: isZoomedOut ? "50%" : "0%",
+                                    width: isZoomedOut ? "300px" : "100%",
+                                    height: isZoomedOut ? "300px" : "100%",
+                                    backgroundColor: "#1a1a1a",
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    y: direction === "up" ? "100%" : "-100%",
+                                }}
+                                transition={{ duration: 0.9 }}
+                                className="relative overflow-hidden"
+                            >
+                                <Image
+                                    src={images[currentIndex]}
+                                    alt={texts[currentIndex].title}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className={`ml-[26px] rounded-l-[40%] ${
+                                        isZoomedOut
+                                            ? "rounded-[100%] -ml-[1%]"
+                                            : ""
+                                    }`}
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                   
+                </div>
+            </div>
+
+            <div className="items-center">
+             {/* Counter */}
+                <div className="absolute bottom-5 left-10 flex items-center justify-center w-24 h-12 border text-white border-white rounded-[200px] text-center z-10">
+                    <p className="text-lg">{`0${currentIndex + 1} — 0${images.length}`}</p>
+                </div>
+
+                 {/* Navigation Arrows */}
+                 <div className="absolute bottom-5 right-10 z-20">
+                        <button                         
+                            onClick={handleLeftArrowClick}
+                        >
+                            <Leftarrow />
+                        </button>
+                        <button
+                            onClick={handleRightArrowClick}
+                        >
+                          <Rightarrow />
+                        </button>
+                 </div>
+
+            </div>
+
+
+            {/* Background Overlay */}
+            <div className="absolute left-0 w-[30%] h-full bg-[#1a1a1a] z-0"></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
